@@ -28,6 +28,13 @@ namespace WnMAiModule
                 avatar.Update();
             }
             this.Refresh();
+
+            if (Tester.GameState == "start" &&
+                Tester.Hostiles.All(h => h.SMachine.CurrentState == "prepare") &&
+                Tester.Allies.All(h => h.SMachine.CurrentState == "prepare"))
+            {
+                Tester.GameState = "go";
+            }
         }
 
         private void Form1_Paint(object sender, PaintEventArgs e)

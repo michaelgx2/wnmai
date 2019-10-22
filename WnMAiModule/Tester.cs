@@ -14,7 +14,7 @@ namespace WnMAiModule
         public static List<TestAvatar> Allies = new List<TestAvatar>();
         public static float TimeStep = 0;
         public static Random Rnd = new Random();
-        public static bool GameStart = false;
+        public static string GameState = "start";
 
         public static void InitTesters()
         {

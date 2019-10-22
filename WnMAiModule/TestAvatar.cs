@@ -44,6 +44,12 @@ namespace WnMAiModule
             ToY = y;
         }
 
+        public void Stop()
+        {
+            ToX = X;
+            ToY = Y;
+        }
+
         public void Talk(string str)
         {
             Talking = str;

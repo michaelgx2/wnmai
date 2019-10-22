@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using WnMAiModuleLib;
 
 namespace WnMAiModule
@@ -42,7 +43,33 @@ namespace WnMAiModule
                     avatar.Talk(trashTalk[Tester.Rnd.Next(0, trashTalk.Length)]);
                     infos.TalkTimer = 5f;
                 }
-            })));
+            })).AddJudge("search", (infos, parent, data) => { return Tester.GameState == "go"; }));
+            //搜索状态
+            States.Add("search", new WsState().SetInit((infos, data) =>
+            {
+                var avatar = data as TestAvatar;
+                var tar = avatar.Side == 0?Tester.Hostiles[avatar.Position]:Tester.Allies[avatar.Position];
+                infos.Target = tar;
+                infos.DistanceToTarget = Math.Sqrt(Math.Pow(tar.X - avatar.X, 2) + Math.Pow(tar.Y - avatar.Y, 2));
+                avatar.Talk("冲鸭！！");
+            }).SetCollector((infos, data) =>
+            {
+                var avatar = data as TestAvatar;
+                var tar = infos.Target as TestAvatar;
+                infos.DistanceToTarget = Math.Sqrt(Math.Pow(tar.X - avatar.X, 2) + Math.Pow(tar.Y - avatar.Y, 2));
+            }).SetAction((infos, step, data) =>
+            {
+                var avatar = data as TestAvatar;
+                var tar = infos.Target as TestAvatar;
+                if (infos.DistanceToTarget > 20)
+                {
+                    avatar.MoveTo(tar.X, tar.Y);
+                }
+                else
+                {
+                    avatar.Stop();
+                }
+            }));
         }
     }
 }
